@@ -5,21 +5,40 @@
  * @format
  */
 
-import React from 'react';
-import {SafeAreaView, Text, useColorScheme} from 'react-native';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import React, {useState} from 'react';
+import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {RandomModule} from '../../lib/random';
 
 export function RandomScreen(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [color, setColor] = useState<[number, number, number] | null>(null);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const applyRandomColor = () => {
+    RandomModule.getRandomColor().then(newColor => setColor(newColor));
   };
 
+  console.log(color);
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <Text>Get Color</Text>
+    <SafeAreaView>
+      <Pressable onPress={applyRandomColor}>
+        <Text>Get Color</Text>
+      </Pressable>
+      <View
+        style={{
+          ...styles.orangeView,
+          backgroundColor: color
+            ? `rgb(${color[0]} ${color[1]} ${color[2]})`
+            : styles.orangeView.backgroundColor,
+        }}
+      />
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  orangeView: {
+    width: 150,
+    height: 150,
+    backgroundColor: 'orange',
+  },
+});
